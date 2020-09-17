@@ -1,20 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>vue-custom-element-demo</title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but vue-custom-element-demo doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <!-- built files will be auto injected -->
-    <tag-demo myprop="I can pass props!"></tag-demo>
-    <script>
-      console.info(document.querySelector('tag-demo'));
-    </script>
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <title>vue-custom-element-demo</title>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but vue-custom-element-demo doesn't work properly without JavaScript enabled. Please enable it
+      to continue.</strong>
+  </noscript>
+  <!-- built files will be auto injected -->
+  <!-- <tag-demo myprop="I can pass props!"></tag-demo>
+  <script>
+    console.info(document.querySelector('tag-demo'));
+  </script> -->
+  <div id="app">
+    <du-table :data="tableData" :columns="tableColumns" :height="tableHeight"></du-table>
+  </div>
+  <script src="/vue.min.js"></script>
+  <script>
+    console.log(window)
+    var app = new Vue({
+      el: '#app',
+      data: {
+        tableHeight: 600,
+        tableColumns: [{
+          title: 'name',
+          key: 'name',
+          // fixed: 'left' //固定
+        }, {
+          title: 'phone',
+          key: 'phone',
+          // fixed: 'left'
+        }, {
+          title: 'age',
+          key: 'age'
+        }, {
+          title: 'title1',
+          key: 'address1',
+          fixed: 'left'
+        }, {
+          title: 'title2',
+          key: 'address2'
+        }, {
+          title: 'title3',
+          key: 'address3'
+        }, {
+          title: 'title4',
+          key: 'address4'
+        }, {
+          title: 'title5',
+          key: 'address5'
+        }, {
+          title: 'title6',
+          key: 'address6',
+          width: 300,
+          html: true
+        }, {
+          title: 'title7',
+          key: 'address7',
+          fixed: 'right'
+        }, {
+          title: 'title8',
+          key: 'address8',
+          // fixed: 'right'
+        }],
+        tableData: [],
+      },
+      mounted: function () {
+        this.getData();
+      },
+      methods: {
+
+        getData: function () {
+          let tableData = [];
+          for (let i = 0; i < 20; i++) {
+            let data = {
+              name: 'st' + i,
+              phone: '15502515852',
+              age: '22',
+              address1: 'title1**********************' + i,
+              address2: 'title2',
+              address3: 'title3',
+              address4: 'title4',
+              address5: 'title5',
+              address6: '<p>Betrayed my love, forced me to leave, and finally I knew the truth, my tears fell, betrayed my love, you have a conscience debt, no matter how much love you pay, you can’t buy it back</p>',
+              address7: 'content abc xyz',
+              address8: 'content 123 456 abc xyz'
+            };
+            tableData.push(data);
+          }
+          setTimeout(() => {
+            this.tableData = tableData;
+          }, 500);
+        },
+        tableClick: function (data, index) {
+          console.log(data);
+        },
+      }
+    });
+  </script>
+
+</body>
+
 </html>
