@@ -1,27 +1,25 @@
 <template>
-  <div class="t-wrap-all" :style="{height:height+'px'}">
+  <div class="t-wrap-all" :style="{ height: height + 'px' }">
     <!--Fixed top header-->
     <div class="t-top-fixrow" ref="tTop">
       <table class="t-style">
         <thead>
           <tr>
             <th v-for="(col, key) in columnsFix.allCol" :key="key">
-              <div :style="{width:col.width+'px'}">{{col.title}}</div>
+              <div :style="{ width: col.width + 'px' }">{{ col.title }}</div>
             </th>
           </tr>
         </thead>
       </table>
     </div>
     <!--Fixed Left-->
-    <template
-      v-if="(data.length>0&&columnsFix.fixLeftCol.length>0)"
-    >
+    <template v-if="data.length > 0 && columnsFix.fixLeftCol.length > 0">
       <div class="t-left-fixcol-header">
         <table class="t-style">
           <thead>
             <tr>
               <th v-for="(th, key) in columnsFix.fixLeftCol" :key="key">
-                <div :style="{width:th.width+'px'}">{{th.title}}</div>
+                <div :style="{ width: th.width + 'px' }">{{ th.title }}</div>
               </th>
             </tr>
           </thead>
@@ -30,34 +28,36 @@
       <div
         class="t-left-fixcol"
         ref="tLeft"
-        :style="{height:tableFixHeight}"
+        :style="{ height: tableFixHeight }"
       >
         <table class="t-style">
           <thead>
             <tr>
               <th v-for="(th, key) in columnsFix.fixLeftCol" :key="key">
-                <div :style="{width:th.width+'px'}">{{th.title}}</div>
+                <div :style="{ width: th.width + 'px' }">{{ th.title }}</div>
               </th>
             </tr>
           </thead>
           <tbody>
             <tr
-              v-for="(rowData,index) in data"
-              :class="{'tr-hover':nowHover==index}"
-              :style="{height: heightRows[index]}"
+              v-for="(rowData, index) in data"
+              :class="{ 'tr-hover': nowHover == index }"
+              :style="{ height: heightRows[index] }"
               @mouseover="trHover(index)"
               @mouseout="trOut"
               :key="index"
             >
               <td v-for="(th, key) in columnsFix.fixLeftCol" :key="key">
-                <div :style="{width:th.width+'px'}">{{rowData[th.key]}}</div>
+                <div :style="{ width: th.width + 'px' }">
+                  {{ rowData[th.key] }}
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </template>
-     <!-- Table Main --> 
+    <!-- Table Main -->
     <div class="t-main-wrap">
       <div
         class="t-wrap"
@@ -101,7 +101,9 @@
             >
               <td v-for="(col, key) in columnsFix.allCol" :key="key">
                 <div :style="{ width: col.width + 'px' }">
-                  {{ rowData[col.key] }}
+                  <slot :name="col.key" :item="rowData[col.key]">
+                    {{ rowData[col.key] }}
+                  </slot>
                 </div>
               </td>
             </tr>
@@ -111,49 +113,47 @@
     </div>
 
     <!--Fix Right -->
-    <template
-      v-if="(data.length>0&&columnsFix.fixRightCol.length>0)"
-    >
+    <template v-if="data.length > 0 && columnsFix.fixRightCol.length > 0">
       <div
         class="t-right-fixcol-header"
-        :class="{'no-left-scroll':noLeftScroll}"
+        :class="{ 'no-left-scroll': noLeftScroll }"
       >
         <table class="t-style">
           <thead>
             <tr>
               <th v-for="(th, key) in columnsFix.fixRightCol" :key="key">
-                <div :style="{width:th.width+'px'}">{{th.title}}</div>
+                <div :style="{ width: th.width + 'px' }">{{ th.title }}</div>
               </th>
             </tr>
           </thead>
         </table>
       </div>
-      
+
       <div
         class="t-right-fixcol"
         ref="tRight"
-        :style="{height:tableFixHeight}"
-        :class="{'no-left-scroll':noLeftScroll}"
+        :style="{ height: tableFixHeight }"
+        :class="{ 'no-left-scroll': noLeftScroll }"
       >
         <table class="t-style">
           <thead>
             <tr>
               <th v-for="(th, key) in columnsFix.fixRightCol" :key="key">
-                <div :style="{width:th.width+'px'}">{{th.title}}</div>
+                <div :style="{ width: th.width + 'px' }">{{ th.title }}</div>
               </th>
             </tr>
           </thead>
           <tbody>
             <tr
-              v-for="(rowData,index) in data"
-              :class="{'tr-hover':nowHover==index}"
-              :style="{height: heightRows[index]}"
+              v-for="(rowData, index) in data"
+              :class="{ 'tr-hover': nowHover == index }"
+              :style="{ height: heightRows[index] }"
               @mouseover="trHover(index)"
               @mouseout="trOut"
               :key="index"
             >
               <td v-for="(th, key) in columnsFix.fixRightCol" :key="key">
-                {{rowData[th.key]}}
+                {{ rowData[th.key] }}
               </td>
             </tr>
           </tbody>
@@ -250,7 +250,6 @@ export default {
     },
     calcTableFix: function() {
       try {
-
         let vm = this;
         const tMain = vm.$refs.tMain;
         const tLeft = vm.$refs.tLeft;
@@ -262,7 +261,6 @@ export default {
           let allCol = vm.columnsFix.allCol[i];
           vm.$set(allCol, "width", allCol.width || ths.item(i).clientWidth);
         }
-
 
         //calcTableFixHeight
         if (tMain.clientHeight <= vm.height) {
@@ -278,21 +276,16 @@ export default {
         const trs = tMain.querySelectorAll("tbody > tr");
         let arr = [];
         for (var i = 0; i < trs.length; i++) {
-          let _l = tLeft.querySelectorAll("tbody > tr")[i]
-            .offsetHeight;
-          let _m = tMain.querySelectorAll("tbody > tr")[i]
-            .offsetHeight;
-          let _r = tRight.querySelectorAll("tbody > tr")[i]
-            .offsetHeight;
+          let _l = tLeft.querySelectorAll("tbody > tr")[i].offsetHeight;
+          let _m = tMain.querySelectorAll("tbody > tr")[i].offsetHeight;
+          let _r = tRight.querySelectorAll("tbody > tr")[i].offsetHeight;
           let _max = Math.ceil(Math.max(_l, _m, _r));
           arr.push(_max + "px");
         }
         vm.heightRows = arr;
-
       } catch (err) {
         console.log(err);
       }
-
     },
     //Double-click event
     dblclick: function(rowData, index) {

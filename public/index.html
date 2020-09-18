@@ -20,7 +20,11 @@
     console.info(document.querySelector('tag-demo'));
   </script> -->
   <div id="app">
-    <du-table :data="tableData" :columns="tableColumns" :height="tableHeight"></du-table>
+    <du-table :data="tableData" :columns="tableColumns" :height="tableHeight">
+      <template slot="address6" slot-scope="{item}">
+        <span>{{item}}</span>
+      </template>
+    </du-table>
   </div>
   <script src="/vue.min.js"></script>
   <script>
