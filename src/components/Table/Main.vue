@@ -1,13 +1,71 @@
 <template>
-  <div>
-    <div class="table-fix-tbody-wrap">
+  <div class="t-wrap-all" :style="{height:height+'px'}">
+    <!--Fixed top header-->
+    <div class="t-top-fixrow" ref="tTop">
+      <table class="t-style">
+        <thead>
+          <tr>
+            <th v-for="(col, key) in columnsFix.allCol" :key="key">
+              <div :style="{width:col.width+'px'}">{{col.title}}</div>
+            </th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <!--Fixed Left-->
+    <template
+      v-if="(data.length>0&&columnsFix.fixLeftCol.length>0)"
+    >
+      <div class="t-left-fixcol-header">
+        <table class="t-style">
+          <thead>
+            <tr>
+              <th v-for="(th, key) in columnsFix.fixLeftCol" :key="key">
+                <div :style="{width:th.width+'px'}">{{th.title}}</div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
       <div
-        class="table-wrap"
+        class="t-left-fixcol"
+        ref="tLeft"
+        :style="{height:tableFixHeight}"
+      >
+        <table class="t-style">
+          <thead>
+            <tr>
+              <th v-for="(th, key) in columnsFix.fixLeftCol" :key="key">
+                <div :style="{width:th.width+'px'}">{{th.title}}</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(rowData,index) in data"
+              :class="{'tr-hover':nowHover==index}"
+              :style="{height: heightRows[index]}"
+              @mouseover="trHover(index)"
+              @mouseout="trOut"
+              :key="index"
+            >
+              <td v-for="(th, key) in columnsFix.fixLeftCol" :key="key">
+                <div :style="{width:th.width+'px'}">{{rowData[th.key]}}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
+     <!-- Table Main --> 
+    <div class="t-main-wrap">
+      <div
+        class="t-wrap"
         @scroll="tableScroll"
-        ref="table"
+        ref="tWrap"
         :style="{ height: height + 'px' }"
       >
-        <table class="table-style table-t" ref="tableTrue">
+        <table class="t-style table-t" ref="tMain">
           <thead>
             <tr>
               <th
@@ -51,6 +109,58 @@
         </table>
       </div>
     </div>
+
+    <!--Fix Right -->
+    <template
+      v-if="(data.length>0&&columnsFix.fixRightCol.length>0)"
+    >
+      <div
+        class="t-right-fixcol-header"
+        :class="{'no-left-scroll':noLeftScroll}"
+      >
+        <table class="t-style">
+          <thead>
+            <tr>
+              <th v-for="(th, key) in columnsFix.fixRightCol" :key="key">
+                <div :style="{width:th.width+'px'}">{{th.title}}</div>
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      
+      <div
+        class="t-right-fixcol"
+        ref="tRight"
+        :style="{height:tableFixHeight}"
+        :class="{'no-left-scroll':noLeftScroll}"
+      >
+        <table class="t-style">
+          <thead>
+            <tr>
+              <th v-for="(th, key) in columnsFix.fixRightCol" :key="key">
+                <div :style="{width:th.width+'px'}">{{th.title}}</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(rowData,index) in data"
+              :class="{'tr-hover':nowHover==index}"
+              :style="{height: heightRows[index]}"
+              @mouseover="trHover(index)"
+              @mouseout="trOut"
+              :key="index"
+            >
+              <td v-for="(th, key) in columnsFix.fixRightCol" :key="key">
+                {{rowData[th.key]}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
+    <!--end -->
   </div>
 </template>
 
@@ -75,27 +185,23 @@ export default {
     data: function() {
       let vm = this;
       vm.$nextTick(function() {
-        vm.checkFix();
-        vm.calcTableFixHeight();
-        vm.calcHeightRows();
+        vm.calcTableFix();
       });
     },
     columns: function() {
-      this.$nextTick(function() {
-        this.checkFix();
-        this.calcTableFixHeight();
+      let vm = this;
+      vm.$nextTick(function() {
+        vm.calcTableFix();
       });
     }
   },
   mounted: function() {
     let vm = this;
-    vm.checkFix();
-    vm.calcTableFixHeight();
+    vm.calcTableFix();
 
     //Listen for window change events
     window.addEventListener("resize", function() {
-      vm.checkFix();
-      vm.calcTableFixHeight();
+      vm.calcTableFix();
     });
   },
   computed: {
@@ -133,55 +239,60 @@ export default {
     },
     tableScrollMethod: function() {
       //Head scrolling
-      this.$refs.tableTop &&
-        (this.$refs.tableTop.scrollLeft = this.$refs.table.scrollLeft);
+      this.$refs.tTop &&
+        (this.$refs.tTop.scrollLeft = this.$refs.tWrap.scrollLeft);
       //Scroll left
-      this.$refs.tableLeft &&
-        (this.$refs.tableLeft.scrollTop = this.$refs.table.scrollTop);
+      this.$refs.tLeft &&
+        (this.$refs.tLeft.scrollTop = this.$refs.tWrap.scrollTop);
       //Scroll right
-      this.$refs.tableRight &&
-        (this.$refs.tableRight.scrollTop = this.$refs.table.scrollTop);
+      this.$refs.tRight &&
+        (this.$refs.tRight.scrollTop = this.$refs.tWrap.scrollTop);
     },
-    checkFix: function() {
-      let vm = this;
-      let ths = vm.$refs.tableTrue.querySelectorAll("th");
-      for (let i = 0; i < vm.columns.length; i++) {
-        //Set the width of each column
-        let allCol = vm.columnsFix.allCol[i];
-        vm.$set(allCol, "width", allCol.width || ths.item(i).clientWidth);
-      }
-    },
-    calcHeightRows: function() {
-      let vm = this;
+    calcTableFix: function() {
       try {
-        const tr = vm.$refs.tableTrue.querySelectorAll("tbody > tr");
+
+        let vm = this;
+        const tMain = vm.$refs.tMain;
+        const tLeft = vm.$refs.tLeft;
+        const tRight = vm.$refs.tRight;
+
+        //Set the width of each column
+        let ths = tMain.querySelectorAll("th");
+        for (let i = 0; i < vm.columns.length; i++) {
+          let allCol = vm.columnsFix.allCol[i];
+          vm.$set(allCol, "width", allCol.width || ths.item(i).clientWidth);
+        }
+
+
+        //calcTableFixHeight
+        if (tMain.clientHeight <= vm.height) {
+          //When the table data is not enough to fill the total height
+          vm.noLeftScroll = true;
+          vm.tableFixHeight = tMain.clientHeight + "px";
+        } else {
+          vm.noLeftScroll = false;
+          vm.tableFixHeight = vm.height - 10 + "px";
+        }
+
+        //calcHeightRows
+        const trs = tMain.querySelectorAll("tbody > tr");
         let arr = [];
-        for (var i = 0; i < tr.length; i++) {
-          let _l = vm.$refs.tableLeft.querySelectorAll("tbody > tr")[i]
+        for (var i = 0; i < trs.length; i++) {
+          let _l = tLeft.querySelectorAll("tbody > tr")[i]
             .offsetHeight;
-          let _m = vm.$refs.tableTrue.querySelectorAll("tbody > tr")[i]
+          let _m = tMain.querySelectorAll("tbody > tr")[i]
             .offsetHeight;
-          let _r = vm.$refs.tableRight.querySelectorAll("tbody > tr")[i]
+          let _r = tRight.querySelectorAll("tbody > tr")[i]
             .offsetHeight;
-          console.log(_m);
           let _max = Math.ceil(Math.max(_l, _m, _r));
           arr.push(_max + "px");
         }
         vm.heightRows = arr;
+
       } catch (err) {
         console.log(err);
       }
-    },
-    //Calculate table height
-    calcTableFixHeight: function() {
-      if (this.$refs.tableTrue.clientHeight <= this.height) {
-        //When the table data is not enough to fill the total height
-        this.noLeftScroll = true;
-        this.tableFixHeight = this.$refs.tableTrue.clientHeight + "px";
-      } else {
-        this.noLeftScroll = false;
-        this.tableFixHeight = this.height - 10 + "px";
-      }
+
     },
     //Double-click event
     dblclick: function(rowData, index) {
@@ -197,3 +308,4 @@ export default {
   }
 };
 </script>
+<style lang="scss" src="./style.scss"></style>
