@@ -1,5 +1,6 @@
 import duTable from "./components/Table/Main.vue";
-
+import duTooltip from "./components/Tooltip/index";
+import "./components/Tooltip/style.scss";
 // import vueCustomElement from "vue-custom-element";
 
 // Vue.use(vueCustomElement);
@@ -10,6 +11,7 @@ import duTable from "./components/Table/Main.vue";
 export function install(Vue) {
   //Vue.use(Buefy)
   Vue.component("du-table", duTable);
+  Vue.directive("tooltip", duTooltip);
   /* -- Add more components here -- */
 }
 
