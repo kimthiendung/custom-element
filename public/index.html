@@ -22,7 +22,7 @@
   <div id="app">
     <du-table :data="tableData" :columns="tableColumns" :height="tableHeight">
       <template slot="address3" slot-scope="{item}">
-        <span v-tooltip:left="item">{{item}}</span>
+        <span v-tooltip:right="item">{{item}}</span>
       </template>
     </du-table>
   </div>

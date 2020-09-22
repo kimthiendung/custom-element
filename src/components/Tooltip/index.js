@@ -38,7 +38,7 @@ export default {
       }
       else if(arg === "right"){
         elTop = elTop/2 + -nodeBCR.height/2;
-        elLeft = nodeBCR.width + margin; //left
+        elLeft = elBCR.width + margin; //left
       }
       
       node.classList.add(arg);
