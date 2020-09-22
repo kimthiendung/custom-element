@@ -7,23 +7,39 @@
   font-size: 12px;
   color: #fff;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: all 0.5s ease;
   z-index: 2147483647;
 }
 #du-tooltip:before {
   content: " ";
   width: 0;
   height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 8px solid #000;
+  border: 8px solid transparent;
   position: absolute;
   top: -6px;
-  left: 5px;
+  left: 6px;
+}
+#du-tooltip.bottom:before {
+  border-top: 0;
+  border-bottom-color: #000;
 }
 #du-tooltip.top:before {
-  border-bottom: transparent;
-  border-top: 8px solid #000;
+  border-bottom: 0;
+  border-top-color: #000;
   top: auto;
   bottom: -6px;
+}
+#du-tooltip.left:before {
+  border-right: 0;
+  border-left-color: #000;
+  top: 6px;
+  right: -6px;
+  left: auto;
+}
+#du-tooltip.right:before {
+  border-left: 0;
+  border-right-color: #000;
+  top: 6px;
+  right: auto;
+  left: -6px;
 }

@@ -210,7 +210,6 @@ export default {
       let fixLeftCol = [];
       let fixRightCol = [];
       let unFixCol = [];
-      console.log(this.columns);
       for (let i = 0; i < this.columns.length; i++) {
         let thisData = this.columns[i];
         if (thisData.fixed && thisData.fixed == "left") {

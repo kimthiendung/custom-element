@@ -21,8 +21,8 @@
   </script> -->
   <div id="app">
     <du-table :data="tableData" :columns="tableColumns" :height="tableHeight">
-      <template slot="address6" slot-scope="{item}">
-        <span v-tooltip="item">{{item}}</span>
+      <template slot="address3" slot-scope="{item}">
+        <span v-tooltip:left="item">{{item}}</span>
       </template>
     </du-table>
   </div>
@@ -36,7 +36,7 @@
         tableColumns: [{
           title: 'name',
           key: 'name',
-          // fixed: 'left' //固定
+          // fixed: 'left'
         }, {
           title: 'phone',
           key: 'phone',
@@ -89,11 +89,11 @@
               phone: '15502515852',
               age: '22',
               address1: 'title1**********************' + i,
-              address2: 'title2',
-              address3: 'title3',
+              address2: 'content 123 456 abc xyz',
+              address3: i + ' - Betrayed my love, forced me to leave, and finally I knew the truth, my tears fell, betrayed my love, you have a conscience debt, no matter how much love you pay, you can’t buy it back',
               address4: 'title4',
               address5: 'title5',
-              address6: i + ' - Betrayed my love, forced me to leave, and finally I knew the truth, my tears fell, betrayed my love, you have a conscience debt, no matter how much love you pay, you can’t buy it back',
+              address6: 'title6',
               address7: 'content abc xyz',
               address8: 'content 123 456 abc xyz'
             };
