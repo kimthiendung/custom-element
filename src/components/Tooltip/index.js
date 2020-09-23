@@ -41,7 +41,7 @@ export default {
         elLeft = elBCR.width + margin; //left
       }
       
-      node.classList.add(arg);
+      node.className = arg;
       node.setAttribute(
         "style",
         "top:" +
